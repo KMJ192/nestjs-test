@@ -1,5 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import * as cookieParser from 'cookie-parser';
+
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -9,6 +11,13 @@ async function bootstrap() {
   // dto 검증
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(3000);
+  app.use(cookieParser());
+
+  app.enableCors({
+    origin: 'http://localhost:4200',
+    credentials: true,
+  });
+
+  await app.listen(8080);
 }
 bootstrap();

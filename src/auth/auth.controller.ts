@@ -1,15 +1,19 @@
 import {
   BadRequestException,
   Body,
+  ClassSerializerInterceptor,
   Controller,
+  Get,
   NotFoundException,
   Post,
+  Req,
   Res,
+  UseInterceptors,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 // DTO
 import { RegisterDto } from './models/register.dto';
@@ -61,5 +65,24 @@ export class AuthController {
     response.cookie('jwt', jwt, { httpOnly: true });
 
     return user;
+  }
+
+  @Post('logout')
+  async logout(@Res({ passthrough: true }) response: Response) {
+    response.clearCookie('jwt');
+
+    return {
+      message: 'Success',
+    };
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor) // Exclude의 데이터를 응답에서 제외
+  @Get('user')
+  async user(@Req() request: Request) {
+    const cookie = request.cookies['jwt'];
+
+    const data = await this.jwtService.verifyAsync(cookie);
+
+    return this.userService.findOne({ id: data['id'] });
   }
 }
