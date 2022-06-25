@@ -8,6 +8,7 @@ import {
   Post,
   Req,
   Res,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
@@ -20,6 +21,7 @@ import { RegisterDto } from './models/register.dto';
 
 // User
 import { UserService } from 'src/user/user.service';
+import { AuthGuard } from './auth.guard';
 
 @Controller()
 export class AuthController {
@@ -67,6 +69,7 @@ export class AuthController {
     return user;
   }
 
+  @UseGuards(AuthGuard)
   @Post('logout')
   async logout(@Res({ passthrough: true }) response: Response) {
     response.clearCookie('jwt');
@@ -77,6 +80,7 @@ export class AuthController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor) // Exclude의 데이터를 응답에서 제외
+  @UseGuards(AuthGuard)
   @Get('user')
   async user(@Req() request: Request) {
     const cookie = request.cookies['jwt'];
