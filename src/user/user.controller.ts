@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -11,11 +12,12 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UserCreateDto } from './models/user-create.dto';
+import { UserUpdateDto } from './models/user-update.dto';
 import { User } from './models/user.entity';
 import { UserService } from './user.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
-@Controller()
+@Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
@@ -36,13 +38,26 @@ export class UserController {
     });
   }
 
-  // @Get(':id')
-  // async get(@Param('id') id: number) {
-  //   return this.userService.findOne({ id });
-  // }
+  @Get(':id')
+  async get(@Param('id') id: number) {
+    return this.userService.findOne({ id });
+  }
 
-  // @Put(':id')
-  // async update(@Param('id') id: number) {
+  @Put(':id')
+  async update(@Param('id') id: number, @Body() body: UserUpdateDto) {
+    const { first_name, last_name, email } = body;
 
-  // }
+    await this.userService.update(id, {
+      first_name,
+      last_name,
+      email,
+    });
+
+    return this.userService.findOne({ id });
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    return this.userService.delete(id);
+  }
 }
