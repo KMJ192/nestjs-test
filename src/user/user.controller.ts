@@ -30,12 +30,16 @@ export class UserController {
   @Post()
   async create(@Body() body: UserCreateDto): Promise<User> {
     const password = await bcrypt.hash('1234', 12);
-    const { first_name, last_name, email } = body;
+
+    const { first_name, last_name, email, role_id } = body;
     return this.userService.create({
       first_name,
       last_name,
       email,
       password,
+      role: {
+        id: role_id,
+      },
     });
   }
 
@@ -46,12 +50,15 @@ export class UserController {
 
   @Put(':id')
   async update(@Param('id') id: number, @Body() body: UserUpdateDto) {
-    const { first_name, last_name, email } = body;
+    const { first_name, last_name, email, role_id } = body;
 
     await this.userService.update(id, {
       first_name,
       last_name,
       email,
+      role: {
+        id: role_id,
+      },
     });
 
     return this.userService.findOne({ id });
