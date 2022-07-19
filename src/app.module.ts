@@ -5,9 +5,10 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
-import { RoleController } from './role/role.controller';
-import { RoleService } from './role/role.service';
+// import { RoleController } from './role/role.controller';
+// import { RoleService } from './role/role.service';
 import { RoleModule } from './role/role.module';
+import { PermissionModule } from './permission/permission.module';
 
 @Module({
   imports: [
@@ -21,11 +22,12 @@ import { RoleModule } from './role/role.module';
       database: 'TEST_DB',
       entities: [],
       autoLoadEntities: true,
-      // synchronize: true,
+      synchronize: true,
     }),
     AuthModule,
     CommonModule,
     RoleModule,
+    PermissionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

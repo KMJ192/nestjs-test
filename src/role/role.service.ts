@@ -19,7 +19,7 @@ export class RoleService {
   }
 
   async findOne(condition): Promise<Role> {
-    return this.roleRepository.findOneBy(condition);
+    return this.roleRepository.findOne(condition);
   }
 
   async update(id: number, data): Promise<any> {
