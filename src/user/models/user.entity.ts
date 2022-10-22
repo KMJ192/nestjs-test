@@ -26,7 +26,7 @@ export class User {
   @Exclude()
   password: string;
 
-  @ManyToOne(() => Role)
-  @JoinColumn({ name: 'role_id' })
-  role: Role;
+  // @ManyToOne(() => Role)
+  // @JoinColumn({ name: 'role_id' })
+  // role: Role;
 }
